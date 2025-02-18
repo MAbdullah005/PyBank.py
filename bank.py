@@ -75,3 +75,16 @@ class Account:
     self.status=True
     print("Here are your account number ",self.account_number)
     print("Your account status is active",self.status)
+
+    # Function to check if the duplicated email is in the 
+     # databse if the email is exist user enter to email 
+     # again until enter a correct email 
+    def check_email_duplication(self,mail)->bool:
+      with sqlite3.connect("data.db") as conn:
+         command="SELECT Email FROM Data"
+         cursor=conn.execute(command)
+         for row in cursor:
+            if row[0]==mail:
+                self.blink_message("This email is already registered")
+                return True
+      return False
