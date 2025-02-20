@@ -88,3 +88,43 @@ class Account:
                 self.blink_message("This email is already registered")
                 return True
       return False
+
+
+ def check_cnic_duplication(self,cnic)->bool:
+      
+      with sqlite3.connect("data.db") as conn:
+    
+         command="SELECT Cnic FROM Data"
+         cursor=conn.execute(command)
+         for row in cursor:
+            if row[0]==(cnic):
+                print(row[0],"Why")
+                self.blink_message("This Cnic is already registered")
+                return True
+         return False
+
+
+ def get_account_number(self):
+     account=["1","2","3","4"]
+     account_num=""
+     for a in range(1):
+        account_num+=random.choice(account)
+        print("a",a," ..",account_num)
+
+     while self.Check_account_num(account_num):
+          account_num=""
+          for a in range(1):
+           account_num+=random.choice(account)
+     self.account_number=account_num
+
+ def Password_manage(self):
+
+     pas=input("Enter a password ")
+     self.password=input("Enter a password for conformation ")
+     if pas!=self.password:
+         while True:
+              self.blink_message("             Please enter a corect Password")
+              pas=input("\nEnter a password ")
+              self.password=input("Enter a password for conformation ")
+              if pas==self.password:
+                break
