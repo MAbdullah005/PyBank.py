@@ -15,49 +15,79 @@ class Customer:
         # bank account or both
 
     def enter_info(self):
-        print("\n")
-        self.name=(input("Enter a your name "))
-        self.last_name=input("Enter a last name ")
-        try:
-          year=int(input("entre a yaer "))
-          month=int(input("Enter a month "))
-          day=int(input("Enter a day "))
-          self.brith_date=datetime.date(year,month,day)
-          print(self.brith_date)
-        except ValueError as e:
-          print("Expection occure")  
-          exit()
-        try:
-          self.cnic=int(input("Enter a cnic "))
-          #while self.check_cnic_duplication(int(self.cnic)):
-           #   print("\nEnter a correct cnic or -1 ")
-            #  self.cnic=int(input("Enter a Cnic "))  
-             # if self.cnic==-1:
-              #    exit()
-        except ValueError as e:
-           print("Expection occure cnic is int type")
-        self.adress=input("Enter a adress ")
-        self.city=input("Enter a city ")
-        self.country=input("Enter a country name ")
-        self.age=int(abs((datetime.date.today()-self.brith_date).days/365))
-        print("person age is ",self.age)
+     print("\n")
+     self.name=(input("Enter a your name "))
+     self.last_name=input("Enter a last name ")
+     try:
+       year=int(input("entre a yaer "))
+       month=int(input("Enter a month "))
+       day=int(input("Enter a day "))
+       self.brith_date=datetime.date(year,month,day)
+       print(self.brith_date)
+     except ValueError as e:
+       print("Expection occure")  
+       exit()
+     try:
+       self.cnic=int(input("Enter a cnic "))
+       while self.check_cnic_duplication(int(self.cnic)):
+           print("\nEnter a correct cnic or -1 ")
+           self.cnic=int(input("Enter a Cnic "))  
+           if self.cnic==-1:
+               exit()
+     except ValueError as e:
+        print("Expection occure cnic is int type")
+     self.adress=input("Enter a adress ")
+     self.city=input("Enter a city ")
+     self.country=input("Enter a country name ")
+     self.age=int(abs((datetime.date.today()-self.brith_date).days/365))
+     print("person age is ",self.age)
 
-        try:
-          data=[str(self.cnic),self.name,self.last_name,self.brith_date.isoformat(),self.adress,self.city,self.country,self.age]
-          with sqlite3.connect("DataBase.db") as conn:
+     try:
+       data=[str(self.cnic),self.name,self.last_name,self.brith_date.isoformat(),self.adress,self.city,self.country,self.age]
+       with sqlite3.connect("DataBase.db") as conn:
   
-              command='''INSERT INTO CUSTOMER ("Cnic", "Name", "Last Name", "Age", "Brith Date", "Address", "City", "Country") VALUES (?,?,?,?,?,?,?,?)'''
-              conn.execute(command,data)
-              conn.commit()     
-        
-        except TypeError as e:
-            print("Type error expection occure ")
-        finally:
-            if 'conn' in locals():
-              conn.close()  # Ensure connection is closed
-              print("Database operation complete.")
+           command='''INSERT INTO CUSTOMER ("Cnic", "Name", "Last Name", "Age", "Brith Date", "Address", "City", "Country") VALUES (?,?,?,?,?,?,?,?)'''
+           conn.execute(command,data)
+           conn.commit()     
+     
+     except TypeError as e:
+         print("Type error expection occure ")
+     finally:
+         if 'conn' in locals():
+           conn.close()  # Ensure connection is closed
+           print("Database operation complete.")
+     try:
+         with sqlite3.connect("DataBase.db") as conn:
+          command="SELECT * FROM Customer"
+          cursor=conn.execute(command)
+          header = ['Customer_ID','Cnic', ' Name', 'Last Name', 'Age', 'Brith Date', 'Address', 'City', 'Country']
+          self.Write_data(header,cursor)
+          file_path='D:\python.pyt\PythonApplication1\PythonApplication1\Customers.csv'
+          self.open_file_in_default_application(file_path)
+     except ValueError as e:
+         print("Expection ccure")
+     finally:
+         if 'conn' in locals():
+           conn.close()  # Ensure connection is closed
+           print("Database operation complete to Customers.")
 
-        # update any attribute of he person class 
+     # update any attribute of he person class 
+     # Depedent on a choice 
+
+ def Write_data(self,header,rows):
+     with open('Customers.csv', mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(header)
+            writer.writerows(rows)
+
+ def open_file_in_default_application(self,file_path):
+   if platform.system() == "Windows":
+     # Open with the default program (Excel, WPS, etc.)
+     os.startfile(file_path)
+   elif platform.system() == "Darwin":  # macOS
+     subprocess.run(["open", file_path])
+   elif platform.system() == "Linux":
+     subprocess.run(["xdg-open", file_path])        # update any attribute of he person class 
         # Depedent on a choice 
 
     def Update_info(self):
