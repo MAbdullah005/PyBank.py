@@ -1,0 +1,7 @@
+Python
+sql
+sqllite
+file handling
+email automation
+object orinted programing
+data structures
